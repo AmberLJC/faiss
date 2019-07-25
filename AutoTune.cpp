@@ -1,7 +1,8 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
  *
- * This source code is licensed under the MIT license found in the
+ * This source code is licensed under the BSD+Patents license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
@@ -410,6 +411,14 @@ void ParameterSpace::initialize (const Index * index)
             pr.values.push_back (1 << i);
         }
     }
+    if (dynamic_cast<const IndexLSH*>(index)){
+	ParameterRange & pr = add_range("efSearch");
+	for (int i = 2; i <= 9; i++){
+	printf("new para added by jc\n");
+	 	pr.values.push_back (1 << i);
+	}
+    }	    
+
 }
 
 #undef DC
@@ -468,22 +477,9 @@ void ParameterSpace::set_index_parameter (
     }
     if (DC (IndexShards)) {
         // call on all sub-indexes
-        auto fn =
-          [this, name, val](int, Index* subIndex) {
-            set_index_parameter(subIndex, name, val);
-          };
-
-        ix->runOnIndex(fn);
-        return;
-    }
-    if (DC (IndexReplicas)) {
-        // call on all sub-indexes
-        auto fn =
-          [this, name, val](int, Index* subIndex) {
-            set_index_parameter(subIndex, name, val);
-          };
-
-        ix->runOnIndex(fn);
+        for (auto & shard_index : ix->shard_indexes) {
+            set_index_parameter (shard_index, name, val);
+        }
         return;
     }
     if (DC (IndexRefineFlat)) {
@@ -555,6 +551,11 @@ void ParameterSpace::set_index_parameter (
                 return;
             }
         }
+	if (DC (IndexLSH)){
+	
+		
+		return;
+	}
     }
 
     FAISS_THROW_FMT ("ParameterSpace::set_index_parameter:"
@@ -905,13 +906,18 @@ Index *index_factory (int d, const char *description_in, MetricType metric)
                    sscanf (tok, "HNSW%d", &M) == 1) {
             index_1 = new IndexHNSWFlat (d, M);
         } else if (!index &&
+	     	sscanf (tok, "LSH%d" , &nbit) == 1) {
+	     index_1 = new IndexLSH (d, nbit,true,true);
+		}
+	else if (!index &&
                    sscanf (tok, "HNSW%d_SQ%d", &M, &pq_m) == 2 &&
                    pq_m == 8) {
             index_1 = new IndexHNSWSQ (d, ScalarQuantizer::QT_8bit, M);
         } else if (stok == "RFlat") {
             make_IndexRefineFlat = true;
         } else {
-            FAISS_THROW_FMT( "could not parse token \"%s\" in %s\n",
+
+            FAISS_THROW_FMT( "(UPDATE LSH)could not parse token \"%s\" in %s\n",
                              tok, description_in);
         }
 
