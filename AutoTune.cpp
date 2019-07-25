@@ -475,14 +475,14 @@ void ParameterSpace::set_index_parameter (
         set_index_parameter (ix->index, name, val);
         return;
     }
-    if (DC (IndexShards)) {
+/*    if (DC (IndexShards)) {
         // call on all sub-indexes
         for (auto & shard_index : ix->shard_indexes) {
             set_index_parameter (shard_index, name, val);
         }
         return;
     }
-    if (DC (IndexRefineFlat)) {
+  */  if (DC (IndexRefineFlat)) {
         if (name == "k_factor_rf") {
             ix->k_factor = int(val);
             return;
