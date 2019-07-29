@@ -69,44 +69,6 @@ void pq_estimators_from_tables_Mmul4 (int M, const CT * codes,
     }
 }
 
-    void pq_estimators_from_tables_Mmul10 (int M, const CT * codes,
-                                          size_t ncodes,
-                                          const float * __restrict dis_table,
-                                          size_t ksub,
-                                          size_t k,
-                                          float * heap_dis,
-                                          long * heap_ids)
-    {
-
-        for (size_t j = 0; j < ncodes; j++) {
-            float dis = 0;
-            const float *dt = dis_table;
-
-            for (size_t m = 0; m < M; m+=10) {
-                float dism = 0;
-                dism  = dt[*codes++]; dt += ksub;
-                dism += dt[*codes++]; dt += ksub;
-                dism += dt[*codes++]; dt += ksub;
-                dism += dt[*codes++]; dt += ksub;
-
-                dism += dt[*codes++]; dt += ksub;
-                dism += dt[*codes++]; dt += ksub;
-                dism += dt[*codes++]; dt += ksub;
-                dism += dt[*codes++]; dt += ksub;
-
-                dism += dt[*codes++]; dt += ksub;
-                dism += dt[*codes++]; dt += ksub;
-                dis += dism;
-            }
-
-            if (C::cmp (heap_dis[0], dis)) {
-                heap_pop<C> (k, heap_dis, heap_ids);
-                heap_push<C> (k, heap_dis, heap_ids, dis, j);
-            }
-        }
-    }
-
-
 template <typename CT, class C>
 void pq_estimators_from_tables_M4 (const CT * codes,
                                    size_t ncodes,
@@ -143,13 +105,7 @@ static inline void pq_estimators_from_tables (const ProductQuantizer& pq,
                                               long * heap_ids)
 {
 
-    if (pq.M == 10)  {
 
-        pq_estimators_from_tables_M10<CT, C> (codes, ncodes,
-                                             dis_table, pq.ksub, k,
-                                             heap_dis, heap_ids);
-        return;
-    }
 
     if (pq.M == 4)  {
 
@@ -159,12 +115,14 @@ static inline void pq_estimators_from_tables (const ProductQuantizer& pq,
         return;
     }
 
+
     if (pq.M % 4 == 0) {
         pq_estimators_from_tables_Mmul4<CT, C> (pq.M, codes, ncodes,
                                                 dis_table, pq.ksub, k,
                                                 heap_dis, heap_ids);
         return;
     }
+
 
     /* Default is relatively slow */
     const size_t M = pq.M;
