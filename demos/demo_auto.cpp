@@ -342,14 +342,14 @@ write<<"  ||  ";
 	write<<n_10 / float(nq);
 	 write<<"  -  ";
 write<<n_100 / float(nq)<<endl;
-if(n_100 < 0.8){
+if(n_100 < 800){
 
-    write<<"  Failed  ";
+    write<<"  Failed  "<<endl;
 
 }
 else{
 
-    write<<"  Success  ";
+    write<<"  Success  "<<endl;
 
 }
 	write.close();
