@@ -330,6 +330,8 @@ char RES[50];//定义字符数组a,b
 write<<argv[1];
 write<<"  ||  ";
 write<<idx_cons;
+write<<"  ||  ";
+
 write<<src;
 write<<"  ||  ";
 write<<trn<<endl;
@@ -340,6 +342,16 @@ write<<"  ||  ";
 	write<<n_10 / float(nq);
 	 write<<"  -  ";
 write<<n_100 / float(nq)<<endl;
+if(n_100 < 0.8){
+
+    write<<"  Failed  ";
+
+}
+else{
+
+    write<<"  Success  ";
+
+}
 	write.close();
     }
 
