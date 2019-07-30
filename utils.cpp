@@ -646,12 +646,13 @@ void knn_L2sqr (const float * x,
                 size_t d, size_t nx, size_t ny,
                 float_maxheap_array_t * res)
 {
-    if (d % 4 == 0 && nx < distance_compute_blas_threshold) {
+   // if (d % 4 == 0 && nx < distance_compute_blas_threshold) {
         knn_L2sqr_sse (x, y, d, nx, ny, res);
-    } else {
+  /*  } else {
         NopDistanceCorrection nop;
         knn_L2sqr_blas (x, y, d, nx, ny, res, nop);
     }
+    */
 }
 
 struct BaseShiftDistanceCorrection {
