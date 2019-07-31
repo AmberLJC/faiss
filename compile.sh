@@ -19,5 +19,6 @@ mkdir pipeline/
 mkdir res/
 
 
-
-
+mv ../../naive_PQ_sparse/real_main.cpp datagen/
+cd datagen/
+g++ real_main.cpp -o fake_main  -fpermissive -fopenmp
