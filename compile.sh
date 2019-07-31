@@ -21,4 +21,5 @@ mkdir res/
 
 mv ../../naive_PQ_sparse/real_main.cpp datagen/
 cd datagen/
+mkdir res
 g++ real_main.cpp -o fake_main  -fpermissive -fopenmp
