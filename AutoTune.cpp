@@ -379,7 +379,7 @@ void ParameterSpace::initialize (const Index * index)
     }
     if (DC (IndexPQ)) {
         ParameterRange & pr = add_range("ht");
-        init_pq_ParameterRange (ix->pq, pr);
+        init_pq_ParameterRange (ix->pq, pr); //2M 个 pr
     }
     if (DC (IndexIVFPQ)) {
         ParameterRange & pr = add_range("ht");
@@ -453,12 +453,11 @@ void ParameterSpace::set_index_parameters (
          tok = strtok_r (nullptr, " ,", &ptr)) {
         char name[100];
         double val;
-        int ret = sscanf (tok, "%100[^=]=%lf", name, &val);
+        int ret = sscanf (tok, "%100[^=]=%lf", name, &val);//以= 之前划分
         FAISS_THROW_IF_NOT_FMT (
            ret == 2, "could not interpret parameters %s", tok);
         set_index_parameter (index, name, val);
     }
-
 }
 
 void ParameterSpace::set_index_parameter (
@@ -509,12 +508,12 @@ void ParameterSpace::set_index_parameter (
 
     if (name == "ht") {
         if (DC (IndexPQ)) {
-            if (val >= ix->pq.code_size * 8) {
+           // if (val >= ix->pq.code_size * 8) {   // around 8 * M
                 ix->search_type = IndexPQ::ST_PQ;
-            } else {
+           /* } else {
                 ix->search_type = IndexPQ::ST_polysemous;
                 ix->polysemous_ht = int(val);
-            }
+            }*/
             return;
         } else if (DC (IndexIVFPQ)) {
             if (val >= ix->pq.code_size * 8) {
