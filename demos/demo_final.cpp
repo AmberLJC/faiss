@@ -215,7 +215,6 @@ float * read_dataset(string file_name,   int d, int top_n ){
         }
     }
     return dataset;
-
 }
 
 
@@ -232,9 +231,9 @@ double elapsed ()
 int main(int argc, char *argv[]) {
 
     double t0 = elapsed();
-    size_t dim;
+    size_t dim =0;
 
-    size_t query_num;
+    size_t query_num=0;
     size_t num = 0;
     char filename[50];
     char index_key[50];
@@ -277,6 +276,18 @@ int main(int argc, char *argv[]) {
         }
     }
 
+
+    // const char *index_key = "IVF4096,Flat";
+    // const char *index_key = "LSH4096";
+    // const char *index_key = "HNSW128_2x32";
+    //    const char *index_key = "Flat";
+//   const char *index_key = "HNSW128";
+    // const char *index_key = "PCA80,Flat";
+    // const char *index_key = "IVF4096,PQ8+16";
+    //  const char *index_key = "IVF2048,PQ10";
+    // const char *index_key = "IMI2x8,PQ32";
+    // const char *index_key = "IMI2x8,PQ8+10";
+    // const char *index_key = "OPQ16_64,IMI2x8,PQ8+16";
 
      double t1;
     double idx_cons;
@@ -344,13 +355,14 @@ int main(int argc, char *argv[]) {
 
 
     float *xq = new float [query_num*dim];
-    copy(x  , x + query_num*dim, xq  );
+    copy(x , x + query_num*dim, xq  );
 
     size_t k = 1;
     faiss::Index::idx_t *gt;
     gt = new faiss::Index::idx_t[k * nq];
 
 
+    printf("[%.3f s] Finding ground truth\n");
 
 #pragma omp parallel for
     for (int i = 0; i < query_num; ++i) {
