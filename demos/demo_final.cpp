@@ -278,8 +278,7 @@ int main(int argc, char *argv[]) {
     }
 
 
-    size_t nq = query_num;
-    double t1;
+     double t1;
     double idx_cons;
     double trn;
     double src;
@@ -317,7 +316,7 @@ int main(int argc, char *argv[]) {
     float *xt = new float [nt*dim];
 
     vector<int> perm(num);
-    kms.rand_perm(perm.data(), nt);
+    rand_perm(perm.data(), nt);
     for (int i = 0; i < nt; ++i) {
         copy(x + perm[i] * dim, x  + (1 + perm[i]) * dim, xt + dim * i);
     }
@@ -334,7 +333,7 @@ int main(int argc, char *argv[]) {
 
     t1 = elapsed() - t0;
     printf("[%.3f s] Indexing database, size %ld*%ld\n",
-           t1, nb, d);
+           t1, nb, dim);
     index->add(nb, xb);
     idx_cons = elapsed() - t1 - t0;
     printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", elapsed() - t1 - t0);
@@ -348,6 +347,7 @@ int main(int argc, char *argv[]) {
     copy(x  , x + query_num*dim, xq  );
 
     size_t k = 1;
+    faiss::Index::idx_t *gt;
     gt = new faiss::Index::idx_t[k * nq];
 
 
