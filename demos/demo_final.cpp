@@ -408,7 +408,7 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
-    faiss::ParameterSpace params;
+
 
     printf("[%.3f s] Setting parameter configuration \"%s\" on index\n",
            elapsed() - t0, selected_params.c_str());
@@ -423,8 +423,8 @@ int main(int argc, char *argv[]) {
 
     index->search(nq, xq, k, D, I);
     src = elapsed() - t1 - t0;
-    printf("Read %s \n", GT);
-    printf("(**** %s *****) Index\n ", argv[1]);
+
+    printf("(**** %s *****) Index\n ", index_key);
     printf("(****%.3f s****)  TRAINING TIME. \n", trn);
     printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", idx_cons);
     printf("(****%.3f s****) SEARCHING  TIME. \n", src);
