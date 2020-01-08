@@ -25,7 +25,7 @@ using namespace std;
 using namespace std;
 typedef unsigned char uchar;
 const size_t MAX_DATA = 100000;
-
+const int SEED = 1234;
 class I_ItrReader{
 public:
     virtual ~I_ItrReader() {}
@@ -165,8 +165,8 @@ void rand_perm(int *perm, size_t n) {
 }
 float * fvecs_read( const char  *filename,  string ext, int d, int top_n){
 
-    float vecs = new float[top_n*d];
-    vecs.reserve(d * top_n);
+    float * vecs = new float[top_n*d];
+    //vecs.reserve(d * top_n);
     ItrReader reader(filename, ext);
     cout << "initial ItrReader" << endl;
 
@@ -233,7 +233,7 @@ int main(int argc, char *argv[]) {
 
     double t0 = elapsed();
     size_t dim;
-    size_t K;
+
     size_t query_num;
     size_t num = 0;
     char filename[50];
@@ -248,10 +248,10 @@ int main(int argc, char *argv[]) {
     };
 
     char opt = 0;
-    int index = 0;
+    int indext = 0;
 
 
-    while ((opt = getopt_long(argc, argv, "f:n:d:q:i:", longOpts, &index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "f:n:d:q:i:", longOpts, &indext)) != -1) {
         switch (opt) {
             case 'f':
                 strcpy(filename, optarg);
@@ -278,7 +278,7 @@ int main(int argc, char *argv[]) {
     }
 
 
-    size_t q = query_num;
+    size_t nq = query_num;
     double t1;
     double idx_cons;
     double trn;
