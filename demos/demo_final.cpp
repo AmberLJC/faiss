@@ -351,7 +351,7 @@ int main(int argc, char *argv[]) {
     delete[] xb;
 
 
-    printf("[%.3f s] Loading queries\n", elapsed() - t0);
+    printf("  Loading queries\n", elapsed() - t0);
 
 
     float *xq = new float [query_num*dim];
@@ -362,20 +362,24 @@ int main(int argc, char *argv[]) {
     gt = new faiss::Index::idx_t[k * nq];
 
 
-    printf("[%.3f s] Finding ground truth\n");
+    printf(" Finding ground truth\n");
 
 #pragma omp parallel for
-    for (int i = 0; i < query_num; ++i) {
+    for (int i = 0; i < nq; ++i) {
         float min_dis = 1e20;
         int min_idx = -1;
 #pragma omp parallel for
         for (int j = 0; j < nb; j++) {
+            printf(" = = \n");
+
             int dis = 0;
 //#pragma omp parallel for
             for (int d = 0; d < dim; ++d) {
                 dis += (xb[j * dim + d] - xq[i * dim + d]) *
                        (xb[j * dim + d] - xq[i * dim + d]);
                 if(dis > min_dis) break;
+        cout<< dis<<", ";
+
             }
             if (min_dis > dis) {
                 min_dis = dis;
@@ -383,7 +387,6 @@ int main(int argc, char *argv[]) {
             }
         }
         gt[i] = min_idx;
-
     }
     std::string selected_params;
 
