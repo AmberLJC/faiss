@@ -20,7 +20,7 @@
 #include<fstream>
 using namespace std;
 #include <sys/time.h>
-
+#include <getopt.h>
 #include "../AutoTune.h"
 
 /**
@@ -68,8 +68,7 @@ x[cnt]=in;
 //printf("%.1f , ",x[cnt]);
 cnt++;
   }
-  
-  
+
   /*size_t nr = fread(x, sizeof(int), n * (d + 1), f);
    printf(" total read in nb: %d\n",nr);
    // assert(nr == n * (d + 1) || !"could not read whole file");
@@ -112,97 +111,101 @@ int main(int argc, char *argv[])
 const char* QUERY="curl/curl_query.txt";
    const char* GT="curl/curl_gt.txt";
 */
-   char LEARN[50];//定义字符数组a,b
-    strcpy(LEARN,argv[2]);//将b中
-     strcat(LEARN,"_learn.txt");
-   printf("Read %s \n",LEARN);
-char BASE[50];//定义字符数组a,b
-    strcpy(BASE,argv[2]);//将b中
-     strcat(BASE,"_base.txt");
-   printf("Read %s \n",BASE);
-   char GT[50];//定义字符数组a,b
-    strcpy(GT,argv[2]);//将b中
-     strcat(GT,"_gt.txt");
-  char QUERY[50];//定义字符数组a,b
-    strcpy(QUERY,argv[2]);//将b中
-     strcat(QUERY,"_query.txt");
-   printf("Read %s \n",QUERY);
-  
-  // this is typically the fastest one.
+
+
+
+
+    char LEARN[50];//定义字符数组a,b
+    strcpy(LEARN, argv[2]);//将b中
+    strcat(LEARN, "_learn.txt");
+    printf("Read %s \n", LEARN);
+    char BASE[50];//定义字符数组a,b
+    strcpy(BASE, argv[2]);//将b中
+    strcat(BASE, "_base.txt");
+    printf("Read %s \n", BASE);
+    char GT[50];//定义字符数组a,b
+    strcpy(GT, argv[2]);//将b中
+    strcat(GT, "_gt.txt");
+    char QUERY[50];//定义字符数组a,b
+    strcpy(QUERY, argv[2]);//将b中
+    strcat(QUERY, "_query.txt");
+    printf("Read %s \n", QUERY);
+
+    // this is typically the fastest one.
     // const char *index_key = "IVF4096,Flat";
-  // const char *index_key = "LSH4096";
-   // const char *index_key = "HNSW128_2x32";
- //    const char *index_key = "Flat";
+    // const char *index_key = "LSH4096";
+    // const char *index_key = "HNSW128_2x32";
+    //    const char *index_key = "Flat";
 //   const char *index_key = "HNSW128";
     // const char *index_key = "PCA80,Flat";
     // const char *index_key = "IVF4096,PQ8+16";
-   //  const char *index_key = "IVF2048,PQ10";
+    //  const char *index_key = "IVF2048,PQ10";
     // const char *index_key = "IMI2x8,PQ32";
     // const char *index_key = "IMI2x8,PQ8+10";
     // const char *index_key = "OPQ16_64,IMI2x8,PQ8+16";
-  const char *index_key = argv[1];
-    faiss::Index * index;
+    const char *index_key = argv[1];
+    faiss::Index *index;
 
-    size_t dim=std::atoi( argv[4]);
-   size_t num = std::atoi( argv[3]);
+    size_t dim = std::atoi(argv[4]);
+    size_t num = std::atoi(argv[3]);
     size_t d;
-    size_t learn_num=  size_t (num/10);
-size_t q=1000;
-double t1;
-double idx_cons;
-double trn;
-double src;
-{
-        printf ("[%.3f s] Loading train set\n", elapsed() - t0);
+    size_t learn_num = size_t(num / 10);
+    size_t q = 1000;
+    double t1;
+    double idx_cons;
+    double trn;
+    double src;
+    {
+        printf("[%.3f s] Loading train set\n", elapsed() - t0);
 
         size_t nt;
-        float *xt = fvecs_read(LEARN, learn_num  ,dim, &d, &nt);
-    //   for(int i=0; i < 100 ; i=i+1){printf("%f , ",xt[i]);}
-	printf ("[%.3f s] Preparing index \"%s\" d=%ld\n",
-                elapsed() - t0, index_key, d);
+        float *xt = fvecs_read(LEARN, learn_num, dim, &d, &nt);
+        //   for(int i=0; i < 100 ; i=i+1){printf("%f , ",xt[i]);}
+        printf("[%.3f s] Preparing index \"%s\" d=%ld\n",
+               elapsed() - t0, index_key, d);
         index = faiss::index_factory(d, index_key);
 
-        printf ("[%.3f s] Training on %ld vectors\n", elapsed() - t0, nt);
- t1 =   elapsed() - t0;
+        printf("[%.3f s] Training on %ld vectors\n", elapsed() - t0, nt);
+        t1 = elapsed() - t0;
 
         index->train(nt, xt);
-trn=elapsed()-t1 - t0;  
-printf ("(****%.3f s****)  TRAINING TIME. \n", trn);  
-	delete [] xt;
+        trn = elapsed() - t1 - t0;
+        printf("(****%.3f s****)  TRAINING TIME. \n", trn);
+        delete[] xt;
     }
 
 
     {
-        printf ("[%.3f s] Loading database\n", elapsed() - t0);
+        printf("[%.3f s] Loading database\n", elapsed() - t0);
 
         size_t nb, d2;
-        float *xb = fvecs_read(BASE,num,dim, &d2, &nb);
-       // for(int i=0; i < 100 ; i=i+1){printf("%f , ",xb[i]);}
-	assert(d == d2 || !"dataset does not have same dimension as train set");
+        float *xb = fvecs_read(BASE, num, dim, &d2, &nb);
+        // for(int i=0; i < 100 ; i=i+1){printf("%f , ",xb[i]);}
+        assert(d == d2 || !"dataset does not have same dimension as train set");
 /*        printf ("[%.3f s] Indexing database, size %ld*%ld\n",
                 elapsed() - t0, nb, d);
 
         index->add(nb, xb);
 */
-	 t1 =   elapsed() - t0;
-                printf ("[%.3f s] Indexing database, size %ld*%ld\n",
-               t1 , nb, d);
+        t1 = elapsed() - t0;
+        printf("[%.3f s] Indexing database, size %ld*%ld\n",
+               t1, nb, d);
         index->add(nb, xb);
-idx_cons=elapsed()-t1 - t0;
- printf ("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", elapsed()-t1 - t0);
-        delete [] xb;
+        idx_cons = elapsed() - t1 - t0;
+        printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", elapsed() - t1 - t0);
+        delete[] xb;
     }
 
     size_t nq;
-float *xq;
+    float *xq;
 
     {
-        printf ("[%.3f s] Loading queries\n", elapsed() - t0);
+        printf("[%.3f s] Loading queries\n", elapsed() - t0);
 
         size_t d2;
-        xq = fvecs_read(QUERY,q,dim, &d2, &nq);
+        xq = fvecs_read(QUERY, q, dim, &d2, &nq);
 //	for(int i=0;i < 3000; i=i+1000){printf("%f , ",xq[i]);}
-	assert(d == d2 || !"query does not have same dimension as train set");
+        assert(d == d2 || !"query does not have same dimension as train set");
 
     }
 
@@ -210,20 +213,20 @@ float *xq;
     faiss::Index::idx_t *gt;  // nq * k matrix of ground-truth nearest-neighbors
 
     {
-        printf ("[%.3f s] Loading ground truth for %ld queries\n",
-                elapsed() - t0, nq);
+        printf("[%.3f s] Loading ground truth for %ld queries\n",
+               elapsed() - t0, nq);
 
         // load ground-truth and convert int to long
         size_t nq2;
-float *gt_int = fvecs_read(GT ,q,100, &k, &nq2);
+        float *gt_int = fvecs_read(GT, q, 100, &k, &nq2);
         assert(nq2 == nq || !"incorrect nb of ground truth entries");
 //printf("read %d ground truth with dimension: %d \n ",nq2,k);
         gt = new faiss::Index::idx_t[k * nq];
-        for(int i = 0; i < k * nq; i++) {
-            gt[i] =( int )  gt_int[i];
+        for (int i = 0; i < k * nq; i++) {
+            gt[i] = (int) gt_int[i];
         }
- //for(int i=0; i < 300 ; i=i+100){printf("%d , ",gt[i]);}
- 	delete [] gt_int;
+        //for(int i=0; i < 300 ; i=i+100){printf("%d , ",gt[i]);}
+        delete[] gt_int;
     }
 
     // Result of the auto-tuning
@@ -231,29 +234,29 @@ float *gt_int = fvecs_read(GT ,q,100, &k, &nq2);
 
     { // run auto-tuning
 
-        printf ("[%.3f s] Preparing auto-tune criterion 1-recall at 1 "
-                "criterion, with k=%ld nq=%ld\n", elapsed() - t0, k, nq);
+        printf("[%.3f s] Preparing auto-tune criterion 1-recall at 1 "
+               "criterion, with k=%ld nq=%ld\n", elapsed() - t0, k, nq);
 
         faiss::OneRecallAtRCriterion crit(nq, 1);
-        crit.set_groundtruth (k, nullptr, gt);
+        crit.set_groundtruth(k, nullptr, gt);
         crit.nnn = k; // by default, the criterion will request only 1 NN
 
-        printf ("[%.3f s] Preparing auto-tune parameters\n", elapsed() - t0);
+        printf("[%.3f s] Preparing auto-tune parameters\n", elapsed() - t0);
 
         faiss::ParameterSpace params;
         params.initialize(index);
 
-        printf ("[%.3f s] Auto-tuning over %ld parameters (%ld combinations)\n",
-                elapsed() - t0, params.parameter_ranges.size(),
-                params.n_combinations());
+        printf("[%.3f s] Auto-tuning over %ld parameters (%ld combinations)\n",
+               elapsed() - t0, params.parameter_ranges.size(),
+               params.n_combinations());
 
         faiss::OperatingPoints ops;
-        params.explore (index, nq, xq, crit, &ops);
+        params.explore(index, nq, xq, crit, &ops);
 
-        printf ("[%.3f s] Found the following operating points: \n",
-                elapsed() - t0);
+        printf("[%.3f s] Found the following operating points: \n",
+               elapsed() - t0);
 
-        ops.display ();
+        ops.display();
 
         // keep the first parameter that obtains > 0.5 1-recall@1
         for (int i = 0; i < ops.optimal_pts.size(); i++) {
@@ -262,8 +265,8 @@ float *gt_int = fvecs_read(GT ,q,100, &k, &nq2);
                 break;
             }
         }
-        assert (selected_params.size() >= 0 ||
-                !"could not find good enough op point");
+        assert(selected_params.size() >= 0 ||
+               !"could not find good enough op point");
     }
 
 
@@ -271,92 +274,91 @@ float *gt_int = fvecs_read(GT ,q,100, &k, &nq2);
 
         faiss::ParameterSpace params;
 
-        printf ("[%.3f s] Setting parameter configuration \"%s\" on index\n",
-                elapsed() - t0, selected_params.c_str());
+        printf("[%.3f s] Setting parameter configuration \"%s\" on index\n",
+               elapsed() - t0, selected_params.c_str());
 
-        params.set_index_parameters (index, selected_params.c_str());
+        params.set_index_parameters(index, selected_params.c_str());
 
-       /* printf ("[%.3f s] Perform a search on %ld queries\n",
-                elapsed() - t0, nq);
+        /* printf ("[%.3f s] Perform a search on %ld queries\n",
+                 elapsed() - t0, nq);
 
+         // output buffers
+         faiss::Index::idx_t *I = new  faiss::Index::idx_t[nq * k];
+         float *D = new float[nq * k];
+
+         index->search(nq, xq, k, D, I);
+ */
+
+        t1 = elapsed() - t0;
+        printf("[%.3f s] Perform a search on %ld queries\n",
+               t1, nq);
         // output buffers
-        faiss::Index::idx_t *I = new  faiss::Index::idx_t[nq * k];
+        faiss::Index::idx_t *I = new faiss::Index::idx_t[nq * k];
         float *D = new float[nq * k];
 
         index->search(nq, xq, k, D, I);
-*/
-
-	t1= elapsed() - t0;
-        printf ("[%.3f s] Perform a search on %ld queries\n",
-                 t1, nq);
-        // output buffers
-        faiss::Index::idx_t *I = new  faiss::Index::idx_t[nq * k];
-        float *D = new float[nq * k];
-
-        index->search(nq, xq, k, D, I);
- src=elapsed()-t1 - t0; 
-       	printf("Read %s \n",GT);
-   printf("(**** %s *****) Index\n ",argv[1]);
-   printf ("(****%.3f s****)  TRAINING TIME. \n", trn);
-printf ("(****%.3f s****) INDEX CONSTRUCTION TIME. \n",idx_cons);
- printf ("(****%.3f s****) SEARCHING  TIME. \n", src);
- printf ("[%.3f s] Compute recalls\n", elapsed() - t0);
+        src = elapsed() - t1 - t0;
+        printf("Read %s \n", GT);
+        printf("(**** %s *****) Index\n ", argv[1]);
+        printf("(****%.3f s****)  TRAINING TIME. \n", trn);
+        printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", idx_cons);
+        printf("(****%.3f s****) SEARCHING  TIME. \n", src);
+        printf("[%.3f s] Compute recalls\n", elapsed() - t0);
 
         // evaluate result by hand.
         int n_1 = 0, n_10 = 0, n_100 = 0;
-        for(int i = 0; i < nq; i++) {
+        for (int i = 0; i < nq; i++) {
             int gt_nn = gt[i * k];
-	    for(int j = 0; j < k; j++) {
-  //              printf(" the %d th predicted 1-nn is pt %d\n",i,I[i*k+j]);
-		if (I[i * k + j] == gt_nn ){ 
-                    if(j < 1) n_1++;
-                    if(j < 10) n_10++;
-                    if(j < 100) n_100++;
+            for (int j = 0; j < k; j++) {
+                //              printf(" the %d th predicted 1-nn is pt %d\n",i,I[i*k+j]);
+                if (I[i * k + j] == gt_nn) {
+                    if (j < 1) n_1++;
+                    if (j < 10) n_10++;
+                    if (j < 100) n_100++;
                 }
             }
         }
         printf("R@1 = %.4f\n", n_1 / float(nq));
         printf("R@10 = %.4f\n", n_10 / float(nq));
         printf("R@100 = %.4f\n", n_100 / float(nq));
-ofstream write;
+        ofstream write;
 
-char RES[50];//定义字符数组a,b
-    strcpy(RES,argv[2]);//将b中
-         strcat(RES,"_res.txt");
-	 std::string out(RES);
-	 write.open(RES , ios::app);
+        char RES[50];//定义字符数组a,b
+        strcpy(RES, argv[2]);//将b中
+        strcat(RES, "_res.txt");
+        std::string out(RES);
+        write.open(RES, ios::app);
 //write<<"IDX : "<<argv[1] << "  ||  "<< idx_cons << "  ||  "<<src << "  ||  "<< trn<<end;
 //write << "IDX : "<<argv[1] <<n_1 / float(nq)  << "  -  "<< n_10 / float(nq) <<"  -  "<<n_100 / float(nq)  <<"  -  "<<endl;
-write<<argv[1];
-write<<"  ||  ";
-write<<idx_cons;
-write<<"  ||  ";
+        write << argv[1];
+        write << "  ||  ";
+        write << idx_cons;
+        write << "  ||  ";
 
-write<<src;
-write<<"  ||  ";
-write<<trn<<endl;
-write<<argv[2];
-write<<"  ||  ";
-	write<<n_1 / float(nq);
-	write<<"  -  ";
-	write<<n_10 / float(nq);
-	 write<<"  -  ";
-write<<n_100 / float(nq)<<endl;
-if(n_100 < 800){
+        write << src;
+        write << "  ||  ";
+        write << trn << endl;
+        write << argv[2];
+        write << "  ||  ";
+        write << n_1 / float(nq);
+        write << "  -  ";
+        write << n_10 / float(nq);
+        write << "  -  ";
+        write << n_100 / float(nq) << endl;
+        if (n_100 < 800) {
 
-    write<<"  Failed  "<<endl;
+            write << "  Failed  " << endl;
 
-}
-else{
+        } else {
 
-    write<<"  Success  "<<endl;
+            write << "  Success  " << endl;
 
-}
-	write.close();
+        }
+        write.close();
     }
 
-    delete [] xq;
-    delete [] gt;
+    delete[] xq;
+    delete[] gt;
     delete index;
     return 0;
 }

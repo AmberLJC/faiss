@@ -257,6 +257,7 @@ static void init_hypercube_pca (int d, int nbits,
 
 void ProductQuantizer::train (int n, const float * x)
 {
+{
     if (train_type != Train_shared) {
         train_type_t final_train_type;
         final_train_type = train_type;
