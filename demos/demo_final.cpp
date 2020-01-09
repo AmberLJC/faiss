@@ -348,10 +348,10 @@ int main(int argc, char *argv[]) {
     index->add(nb, xb);
     idx_cons = elapsed() - t1 - t0;
     printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", elapsed() - t1 - t0);
-    delete[] xb;
 
 
-    printf("  Loading queries\n", elapsed() - t0);
+
+    printf("[%.3f s] Loading queries\n", elapsed() - t0);
 
 
     float *xq = new float [query_num*dim];
@@ -371,14 +371,12 @@ int main(int argc, char *argv[]) {
 #pragma omp parallel for
         for (int j = 0; j < nb; j++) {
             printf(" = = \n");
-
             int dis = 0;
-//#pragma omp parallel for
             for (int d = 0; d < dim; ++d) {
                 dis += (xb[j * dim + d] - xq[i * dim + d]) *
                        (xb[j * dim + d] - xq[i * dim + d]);
-                if(dis > min_dis) break;
-        cout<< dis<<", ";
+                //if(dis > min_dis) break;
+                cout<< dis<<", ";
 
             }
             if (min_dis > dis) {
@@ -463,7 +461,7 @@ int main(int argc, char *argv[]) {
     printf("R@10 = %.4f\n", n_10 / float(nq));
     printf("R@100 = %.4f\n", n_100 / float(nq));
     ofstream write;
-
+    delete[] xb;
     delete[] xq;
     delete[] gt;
     delete index;
