@@ -450,7 +450,7 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    size_t gt_time = elapsed() - t1 - t0;
+    float gt_time = elapsed() - t1 - t0;
 
 
     printf("(**** %s *****) Index\n ", index_key);
