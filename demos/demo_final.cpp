@@ -444,7 +444,6 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < nq; i++) {
         int gt_nn = gt[i * k];
         for (int j = 0; j < k; j++) {
-            //              printf(" the %d th predicted 1-nn is pt %d\n",i,I[i*k+j]);
             if (I[i * k + j] == gt_nn) {
                 if (j < 1) n_1++;
                 if (j < 10) n_10++;
