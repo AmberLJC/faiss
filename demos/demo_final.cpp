@@ -363,7 +363,7 @@ int main(int argc, char *argv[]) {
 
 
     printf("[%.3f s]  Finding ground truth\n", elapsed() - t0);
-
+    t1 = elapsed() - t0;
 #pragma omp parallel for
     for (int i = 0; i < nq; ++i) {
         float min_dis = 1e20;
@@ -383,6 +383,8 @@ int main(int argc, char *argv[]) {
         }
         gt[i] = min_idx;
     }
+    float gt_time = elapsed() - t1 - t0;
+
     std::string selected_params;
 
     printf("[%.3f s] Preparing auto-tune criterion 1-recall at 1 "
@@ -437,7 +439,7 @@ int main(int argc, char *argv[]) {
     printf("[%.3f s] Compute recalls\n", elapsed() - t0);
 
 
-    t1 = elapsed() - t0;
+
     int n_1 = 0, n_10 = 0, n_100 = 0;
     for (int i = 0; i < nq; i++) {
         int gt_nn = gt[i * k];
@@ -450,7 +452,6 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    float gt_time = elapsed() - t1 - t0;
 
 
     printf("(**** %s *****) Index\n ", index_key);
@@ -458,7 +459,7 @@ int main(int argc, char *argv[]) {
     printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", idx_cons);
     printf("(****%.3f s****) baseline  time. \n", gt_time);
     printf("(****%.3f s****) SEARCHING  TIME. \n", src);
-    printf("(****%.3f s****) Speed up. \n", gt_time/src);
+    printf("(****%.3f ****) Speed up. \n", gt_time/src);
 
     printf("R@1 = %.4f\n", n_1 / float(nq));
     printf("R@10 = %.4f\n", n_10 / float(nq));
