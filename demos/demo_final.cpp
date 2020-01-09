@@ -370,14 +370,11 @@ int main(int argc, char *argv[]) {
         int min_idx = -1;
 #pragma omp parallel for
         for (int j = 0; j < nb; j++) {
-            printf(" = = \n");
             int dis = 0;
             for (int d = 0; d < dim; ++d) {
                 dis += (xb[j * dim + d] - xq[i * dim + d]) *
                        (xb[j * dim + d] - xq[i * dim + d]);
                 //if(dis > min_dis) break;
-                cout<< dis<<", ";
-
             }
             if (min_dis > dis) {
                 min_dis = dis;
