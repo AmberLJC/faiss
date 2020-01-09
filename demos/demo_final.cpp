@@ -434,14 +434,10 @@ int main(int argc, char *argv[]) {
     index->search(nq, xq, k, D, I);
     src = elapsed() - t1 - t0;
 
-    printf("(**** %s *****) Index\n ", index_key);
-    printf("(****%.3f s****)  TRAINING TIME. \n", trn);
-    printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", idx_cons);
-    printf("(****%.3f s****) SEARCHING  TIME. \n", src);
     printf("[%.3f s] Compute recalls\n", elapsed() - t0);
 
 
-
+    t1 = elapsed() - t0;
     int n_1 = 0, n_10 = 0, n_100 = 0;
     for (int i = 0; i < nq; i++) {
         int gt_nn = gt[i * k];
@@ -454,6 +450,16 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+    size_t gt_time = elapsed() - t1 - t0;
+
+
+    printf("(**** %s *****) Index\n ", index_key);
+    printf("(****%.3f s****) TRAINING TIME. \n", trn);
+    printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", idx_cons);
+    printf("(****%.3f s****) baseline  time. \n", gt_time);
+    printf("(****%.3f s****) SEARCHING  TIME. \n", src);
+    printf("(****%.3f s****) Speed up. \n", gt_time/src);
+
     printf("R@1 = %.4f\n", n_1 / float(nq));
     printf("R@10 = %.4f\n", n_10 / float(nq));
     printf("R@100 = %.4f\n", n_100 / float(nq));
