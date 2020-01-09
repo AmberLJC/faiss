@@ -280,11 +280,11 @@ int main(int argc, char *argv[]) {
     // const char *index_key = "IVF4096,Flat";
     // const char *index_key = "LSH4096";
     // const char *index_key = "HNSW128_2x32";
-    //    const char *index_key = "Flat";
-//   const char *index_key = "HNSW128";
+    // const char *index_key = "Flat";
+    // const char *index_key = "HNSW128";
     // const char *index_key = "PCA80,Flat";
     // const char *index_key = "IVF4096,PQ8+16";
-    //  const char *index_key = "IVF2048,PQ10";
+    // const char *index_key = "IVF2048,PQ10";
     // const char *index_key = "IMI2x8,PQ32";
     // const char *index_key = "IMI2x8,PQ8+10";
     // const char *index_key = "OPQ16_64,IMI2x8,PQ8+16";
@@ -362,7 +362,7 @@ int main(int argc, char *argv[]) {
     gt = new faiss::Index::idx_t[k * nq];
 
 
-    printf(" Finding ground truth\n");
+    printf("[%.3f s]  Finding ground truth\n", elapsed() - t0);
 
 #pragma omp parallel for
     for (int i = 0; i < nq; ++i) {
