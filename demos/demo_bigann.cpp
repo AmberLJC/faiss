@@ -353,7 +353,6 @@ int main(int argc, char *argv[]) {
     printf("[%.3f s] Indexing database, size %ld*%ld\n",
            t1, nb, dim);
 
-
     size_t max_buff_size = int(nb/100);
 
     std::vector<float> buff;
@@ -372,13 +371,11 @@ int main(int argc, char *argv[]) {
         local_cnt++;
         cnt++;
         if (cnt % max_buff_size == 0) {
-
-
-            index->add(max_buff_size, tmp.data());
+            std::cout << "Add " << cnt << " / " << nb << " vectors in total" << std::endl;
+            index->add(max_buff_size, buff.data());
 
             buff.clear();
             buff.resize(max_buff_size * dim);
-            std::cout << "Add " << cnt << " / " << nb << " vectors in total" << std::endl;
             local_cnt = 0;
         }
     }
