@@ -340,7 +340,7 @@ int main(int argc, char *argv[]) {
 
     train  = fvecs_read(learn_filename, "bvecs", dim, nt);
 
-
+/*
 
     index->train(nt, train);
     trn = elapsed() - t1 - t0;
@@ -382,7 +382,7 @@ int main(int argc, char *argv[]) {
 for(int i =0; i<nq; ++i){
     gt[i] = gt_knn[i*topk];
 }
-/*
+
     std::string selected_params;
 
     printf("[%.3f s] Preparing auto-tune criterion 1-recall at 1 "
