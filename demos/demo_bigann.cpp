@@ -267,7 +267,7 @@ double elapsed ()
 
 
 int main(int argc, char *argv[]) {
-
+/*
     double t0 = elapsed();
     size_t dim =128;
 
@@ -466,7 +466,7 @@ for(int i =0; i<nq; ++i){
     return 0;
 
 
-
+*/
 
 }
 
