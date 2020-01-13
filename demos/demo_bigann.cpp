@@ -299,7 +299,7 @@ int main(int argc, char *argv[]) {
 
     printf("[%.3f s] Training on %ld vectors\n", elapsed() - t0, nt);
     t1 = elapsed() - t0;
-    float *xt = new float [nt*dim];
+    float *train = new float [nt*dim];
 
     train  = fvecs_read(learn_filename, "bvecs", dim, nt);
 
@@ -415,16 +415,14 @@ for(int i =0; i<nq; ++i){
     printf("(**** %s *****) Index\n ", index_key);
     printf("(****%.3f s****) TRAINING TIME. \n", trn);
     printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", idx_cons);
-    printf("(****%.3f s****) baseline  time. \n", gt_time);
     printf("(****%.3f s****) SEARCHING  TIME. \n", src);
-    printf("(****%.3f ****) Speed up. \n", gt_time/src);
 
     printf("R@1 = %.4f\n", n_1 / float(nq));
     printf("R@10 = %.4f\n", n_10 / float(nq));
     printf("R@100 = %.4f\n", n_100 / float(nq));
     ofstream write;
-    delete[] xb;
-    delete[] xq;
+    delete[] base;
+    delete[] query;
     delete[] gt;
     delete[] D;
     delete index;
