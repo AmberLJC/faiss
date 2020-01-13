@@ -319,154 +319,154 @@ int main(int argc, char *argv[]) {
     double trn;
     double src;
 
-    faiss::Index *index;
+    /* faiss::Index *index;
 
 
-    printf("[%.3f s] Loading train set\n", elapsed() - t0);
+     printf("[%.3f s] Loading train set\n", elapsed() - t0);
 
-    size_t nt = 100000000;
-    size_t nb = 1000000000;
-    size_t nq = 10000;
-
-
-    //   for(int i=0; i < 100 ; i=i+1){printf("%f , ",xt[i]);}
-    printf("[%.3f s] Preparing index \"%s\" d=%ld\n",
-           elapsed() - t0, index_key, dim);
-    index = faiss::index_factory(dim, index_key);
-/*
-    printf("[%.3f s] Training on %ld vectors\n", elapsed() - t0, nt);
-    t1 = elapsed() - t0;
-    float *train = new float [nt*dim];
-
-    train  = fvecs_read(learn_filename, "bvecs", dim, nt);
+     size_t nt = 100000000;
+     size_t nb = 1000000000;
+     size_t nq = 10000;
 
 
+     //   for(int i=0; i < 100 ; i=i+1){printf("%f , ",xt[i]);}
+     printf("[%.3f s] Preparing index \"%s\" d=%ld\n",
+            elapsed() - t0, index_key, dim);
+     index = faiss::index_factory(dim, index_key);
 
-    index->train(nt, train);
-    trn = elapsed() - t1 - t0;
-    printf("(****%.3f s****)  TRAINING TIME. \n", trn);
-    delete [] train;
+     printf("[%.3f s] Training on %ld vectors\n", elapsed() - t0, nt);
+     t1 = elapsed() - t0;
+     float *train = new float [nt*dim];
 
-
-    float * base = new float [dim * nb];
-    base  = fvecs_read(base_filename, "bvecs", dim, nb);
-
-
-    t1 = elapsed() - t0;
-    printf("[%.3f s] Indexing database, size %ld*%ld\n",
-           t1, nb, dim);
-    index->add(nb, base);
-    idx_cons = elapsed() - t1 - t0;
-    printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", elapsed() - t1 - t0);
+     train  = fvecs_read(learn_filename, "bvecs", dim, nt);
 
 
 
-    printf("[%.3f s] Loading queries\n", elapsed() - t0);
+     index->train(nt, train);
+     trn = elapsed() - t1 - t0;
+     printf("(****%.3f s****)  TRAINING TIME. \n", trn);
+     delete [] train;
 
 
-    float *query = new float [nq*dim];
-    query  = fvecs_read(query_filename, "bvecs", dim, nq);
+     float * base = new float [dim * nb];
+     base  = fvecs_read(base_filename, "bvecs", dim, nb);
 
 
-
-
-    printf("[%.3f s]  Reading ground truth\n", elapsed() - t0);
-
-    size_t nqq;
-    size_t topk;
-    int *gt_knn = ivecs_read(gnd_filename, &topk, &nqq);
-
-    size_t k = 1;
-    faiss::Index::idx_t *gt;
-    gt = new faiss::Index::idx_t[k * nq];
-for(int i =0; i<nq; ++i){
-    gt[i] = gt_knn[i*topk];
-}
-
-    std::string selected_params;
-
-    printf("[%.3f s] Preparing auto-tune criterion 1-recall at 1 "
-           "criterion, with k=%ld nq=%ld\n", elapsed() - t0, k, nq);
+     t1 = elapsed() - t0;
+     printf("[%.3f s] Indexing database, size %ld*%ld\n",
+            t1, nb, dim);
+     index->add(nb, base);
+     idx_cons = elapsed() - t1 - t0;
+     printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", elapsed() - t1 - t0);
 
 
 
-    faiss::OneRecallAtRCriterion crit(nq, 1);
-    crit.set_groundtruth(k, nullptr, gt);
-    crit.nnn = k; // by default, the criterion will request only 1 NN
-
-    printf("[%.3f s] Preparing auto-tune parameters\n", elapsed() - t0);
-
-    faiss::ParameterSpace params;
-    params.initialize(index);
-
-    printf("[%.3f s] Auto-tuning over %ld parameters (%ld combinations)\n",
-           elapsed() - t0, params.parameter_ranges.size(),
-           params.n_combinations());
-
-    faiss::OperatingPoints ops;
-    params.explore(index, nq, query, crit, &ops);
-
-    printf("[%.3f s] Found the following operating points: \n",
-           elapsed() - t0);
-
-    ops.display();
-
-    // keep the first parameter that obtains > 0.5 1-recall@1
-    for (int i = 0; i < ops.optimal_pts.size(); i++) {
-        if (ops.optimal_pts[i].perf > 0.5) {
-            selected_params = ops.optimal_pts[i].key;
-            break;
-        }
-    }
+     printf("[%.3f s] Loading queries\n", elapsed() - t0);
 
 
-    printf("[%.3f s] Setting parameter configuration \"%s\" on index\n",
-           elapsed() - t0, selected_params.c_str());
-
-    params.set_index_parameters(index, selected_params.c_str());
-    t1 = elapsed() - t0;
-    printf("[%.3f s] Perform a search on %ld queries\n",
-           t1, nq);
-    // output buffers
-    faiss::Index::idx_t *I = new faiss::Index::idx_t[nq * k];
-    float *D = new float[nq * k];
-
-    index->search(nq, query, k, D, I);
-    src = elapsed() - t1 - t0;
-
-    printf("[%.3f s] Compute recalls\n", elapsed() - t0);
-
-    int n_1 = 0, n_10 = 0, n_100 = 0;
-    for (int i = 0; i < nq; i++) {
-        int gt_nn = gt[i * k];
-        for (int j = 0; j < k; j++) {
-            if (I[i * k + j] == gt_nn) {
-                if (j < 1) n_1++;
-                if (j < 10) n_10++;
-                if (j < 100) n_100++;
-            }
-        }
-    }
+     float *query = new float [nq*dim];
+     query  = fvecs_read(query_filename, "bvecs", dim, nq);
 
 
-    printf("(**** %s *****) Index\n ", index_key);
-    printf("(****%.3f s****) TRAINING TIME. \n", trn);
-    printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", idx_cons);
-    printf("(****%.3f s****) SEARCHING  TIME. \n", src);
-
-    printf("R@1 = %.4f\n", n_1 / float(nq));
-    printf("R@10 = %.4f\n", n_10 / float(nq));
-    printf("R@100 = %.4f\n", n_100 / float(nq));
-    ofstream write;
-    delete[] base;
-    delete[] query;
-    delete[] gt;
-    delete[] D;
-    delete index;
-    return 0;
 
 
-*/
+     printf("[%.3f s]  Reading ground truth\n", elapsed() - t0);
+
+     size_t nqq;
+     size_t topk;
+     int *gt_knn = ivecs_read(gnd_filename, &topk, &nqq);
+
+     size_t k = 1;
+     faiss::Index::idx_t *gt;
+     gt = new faiss::Index::idx_t[k * nq];
+ for(int i =0; i<nq; ++i){
+     gt[i] = gt_knn[i*topk];
+ }
+
+     std::string selected_params;
+
+     printf("[%.3f s] Preparing auto-tune criterion 1-recall at 1 "
+            "criterion, with k=%ld nq=%ld\n", elapsed() - t0, k, nq);
+
+
+
+     faiss::OneRecallAtRCriterion crit(nq, 1);
+     crit.set_groundtruth(k, nullptr, gt);
+     crit.nnn = k; // by default, the criterion will request only 1 NN
+
+     printf("[%.3f s] Preparing auto-tune parameters\n", elapsed() - t0);
+
+     faiss::ParameterSpace params;
+     params.initialize(index);
+
+     printf("[%.3f s] Auto-tuning over %ld parameters (%ld combinations)\n",
+            elapsed() - t0, params.parameter_ranges.size(),
+            params.n_combinations());
+
+     faiss::OperatingPoints ops;
+     params.explore(index, nq, query, crit, &ops);
+
+     printf("[%.3f s] Found the following operating points: \n",
+            elapsed() - t0);
+
+     ops.display();
+
+     // keep the first parameter that obtains > 0.5 1-recall@1
+     for (int i = 0; i < ops.optimal_pts.size(); i++) {
+         if (ops.optimal_pts[i].perf > 0.5) {
+             selected_params = ops.optimal_pts[i].key;
+             break;
+         }
+     }
+
+
+     printf("[%.3f s] Setting parameter configuration \"%s\" on index\n",
+            elapsed() - t0, selected_params.c_str());
+
+     params.set_index_parameters(index, selected_params.c_str());
+     t1 = elapsed() - t0;
+     printf("[%.3f s] Perform a search on %ld queries\n",
+            t1, nq);
+     // output buffers
+     faiss::Index::idx_t *I = new faiss::Index::idx_t[nq * k];
+     float *D = new float[nq * k];
+
+     index->search(nq, query, k, D, I);
+     src = elapsed() - t1 - t0;
+
+     printf("[%.3f s] Compute recalls\n", elapsed() - t0);
+
+     int n_1 = 0, n_10 = 0, n_100 = 0;
+     for (int i = 0; i < nq; i++) {
+         int gt_nn = gt[i * k];
+         for (int j = 0; j < k; j++) {
+             if (I[i * k + j] == gt_nn) {
+                 if (j < 1) n_1++;
+                 if (j < 10) n_10++;
+                 if (j < 100) n_100++;
+             }
+         }
+     }
+
+
+     printf("(**** %s *****) Index\n ", index_key);
+     printf("(****%.3f s****) TRAINING TIME. \n", trn);
+     printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", idx_cons);
+     printf("(****%.3f s****) SEARCHING  TIME. \n", src);
+
+     printf("R@1 = %.4f\n", n_1 / float(nq));
+     printf("R@10 = %.4f\n", n_10 / float(nq));
+     printf("R@100 = %.4f\n", n_100 / float(nq));
+     ofstream write;
+     delete[] base;
+     delete[] query;
+     delete[] gt;
+     delete[] D;
+     delete index;
+     return 0;
+
+
+ */
 
 }
 
