@@ -267,7 +267,7 @@ double elapsed ()
 
 
 int main(int argc, char *argv[]) {
-/*
+
     double t0 = elapsed();
     size_t dim =128;
 
@@ -382,7 +382,7 @@ int main(int argc, char *argv[]) {
 for(int i =0; i<nq; ++i){
     gt[i] = gt_knn[i*topk];
 }
-
+/*
     std::string selected_params;
 
     printf("[%.3f s] Preparing auto-tune criterion 1-recall at 1 "
