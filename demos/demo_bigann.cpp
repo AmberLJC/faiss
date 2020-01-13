@@ -333,14 +333,14 @@ int main(int argc, char *argv[]) {
     printf("[%.3f s] Preparing index \"%s\" d=%ld\n",
            elapsed() - t0, index_key, dim);
     index = faiss::index_factory(dim, index_key);
-
+/*
     printf("[%.3f s] Training on %ld vectors\n", elapsed() - t0, nt);
     t1 = elapsed() - t0;
     float *train = new float [nt*dim];
 
     train  = fvecs_read(learn_filename, "bvecs", dim, nt);
 
-/*
+
 
     index->train(nt, train);
     trn = elapsed() - t1 - t0;
