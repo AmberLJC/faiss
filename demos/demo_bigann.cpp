@@ -319,7 +319,7 @@ int main(int argc, char *argv[]) {
     double trn;
     double src;
 
-    /* faiss::Index *index;
+     faiss::Index *index;
 
 
      printf("[%.3f s] Loading train set\n", elapsed() - t0);
@@ -327,7 +327,7 @@ int main(int argc, char *argv[]) {
      size_t nt = 100000000;
      size_t nb = 1000000000;
      size_t nq = 10000;
-
+/*
 
      //   for(int i=0; i < 100 ; i=i+1){printf("%f , ",xt[i]);}
      printf("[%.3f s] Preparing index \"%s\" d=%ld\n",
