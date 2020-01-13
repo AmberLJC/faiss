@@ -331,7 +331,7 @@ void ProductQuantizer::train (int n, const float * x)
     }
 }
 
-template<class PQEncoder>
+//template<class PQEncoder>
 void compute_code(const ProductQuantizer& pq, const float *x, uint8_t *code) {
   float distances [pq.ksub];
   PQEncoder encoder(code, pq.nbits);
