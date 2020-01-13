@@ -8,11 +8,15 @@
 #include <cstdlib>
 #include <cassert>
 #include <cstring>
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
 #include<iostream>
 #include<fstream>
+
+
 using namespace std;
 #include <sys/time.h>
 #include <getopt.h>
@@ -24,8 +28,7 @@ using namespace std;
 
 using namespace std;
 typedef unsigned char uchar;
-const size_t MAX_DATA = 100000;
-const int SEED = 1234;
+
 class I_ItrReader{
 public:
     virtual ~I_ItrReader() {}
@@ -155,14 +158,6 @@ std::vector<float> ItrReader::Next(){
     return m_reader->Next();
 }
 
-void rand_perm(int *perm, size_t n) {
-    for (size_t i = 0; i < n; i++) perm[i] = i;
-    srand(SEED);
-    for (size_t i = 0; i + 1 < n; i++) {
-        int i2 = rand() % n;
-        std::swap(perm[i], perm[i2]);
-    }
-}
 float * fvecs_read( const char  *filename,  string ext, int d, int top_n){
 
     float * vecs = new float[top_n*d];
@@ -275,7 +270,6 @@ int main(int argc, char *argv[]) {
 
     double t0 = elapsed();
     size_t dim =128;
-
 
     char learn_filename[50] = "../../naive_PQ_sparse/data/bigann_learn.bvecs";
     char query_filename[50] = "../../naive_PQ_sparse/data/bigann_query.bvecs";
