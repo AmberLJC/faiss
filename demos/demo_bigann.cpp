@@ -354,13 +354,13 @@ int main(int argc, char *argv[]) {
            t1, nb, dim);
 
 
-    size_t max_buff = int(nb/100);
+    size_t max_buff_size = int(nb/100);
 
     std::vector<float> buff;
     buff.resize(max_buff_size * DIM);
     ItrReader reader(base_filename, "bvecs");
 
-    cnt = 0;
+    size_t cnt = 0;
     size_t local_cnt = 0;
     while (!reader.IsEnd()) {
         if (cnt >= N) {
@@ -378,7 +378,7 @@ int main(int argc, char *argv[]) {
 
             buff.clear();
             buff.resize(max_buff_size * DIM);
-            std::cout << "Add " << cnt << " / " << N << " vectors in total" << std::endl;
+            std::cout << "Add " << cnt << " / " << nb << " vectors in total" << std::endl;
             local_cnt = 0;
         }
     }
@@ -487,7 +487,6 @@ int main(int argc, char *argv[]) {
      printf("R@10 = %.4f\n", n_10 / float(nq));
      printf("R@100 = %.4f\n", n_100 / float(nq));
      ofstream write;
-     delete[] base;
      delete[] query;
      delete[] gt;
      delete[] D;
