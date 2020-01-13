@@ -331,7 +331,7 @@ int main(int argc, char *argv[]) {
      //   for(int i=0; i < 100 ; i=i+1){printf("%f , ",xt[i]);}
      printf("[%.3f s] Preparing index \"%s\" d=%ld\n",
             elapsed() - t0, index_key, dim);
-     index = faiss::index_factory(dim, index_key);
+     index = faiss::index_factory(dim, "LSH256");
 
 /*
      printf("[%.3f s] Training on %ld vectors\n", elapsed() - t0, nt);
