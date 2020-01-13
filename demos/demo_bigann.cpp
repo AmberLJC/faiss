@@ -191,6 +191,10 @@ float * fvecs_read( const char  *filename,  string ext, int d, int top_n){
     }
     return vecs;
 }
+int *ivecs_read(const char *fname, size_t *d_out, size_t *n_out)
+{
+    return (int*)fvecs_read(fname, d_out, n_out);
+}
 
 
 
@@ -367,7 +371,7 @@ for(int i =0; i<nq; ++i){
            params.n_combinations());
 
     faiss::OperatingPoints ops;
-    params.explore(index, nq, xq, crit, &ops);
+    params.explore(index, nq, query, crit, &ops);
 
     printf("[%.3f s] Found the following operating points: \n",
            elapsed() - t0);
