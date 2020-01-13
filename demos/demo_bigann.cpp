@@ -324,7 +324,7 @@ int main(int argc, char *argv[]) {
 
      printf("[%.3f s] Loading train set\n", elapsed() - t0);
 
-     size_t nt = 100000000;
+     size_t nt = 10000000;
      size_t nb = 1000000000;
      size_t nq = 10000;
 
