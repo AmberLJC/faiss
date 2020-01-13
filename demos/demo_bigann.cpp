@@ -327,13 +327,13 @@ int main(int argc, char *argv[]) {
      size_t nt = 100000000;
      size_t nb = 1000000000;
      size_t nq = 10000;
-/*
 
      //   for(int i=0; i < 100 ; i=i+1){printf("%f , ",xt[i]);}
      printf("[%.3f s] Preparing index \"%s\" d=%ld\n",
             elapsed() - t0, index_key, dim);
      index = faiss::index_factory(dim, index_key);
 
+/*
      printf("[%.3f s] Training on %ld vectors\n", elapsed() - t0, nt);
      t1 = elapsed() - t0;
      float *train = new float [nt*dim];
