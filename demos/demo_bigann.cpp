@@ -357,18 +357,18 @@ int main(int argc, char *argv[]) {
     size_t max_buff_size = int(nb/100);
 
     std::vector<float> buff;
-    buff.resize(max_buff_size * DIM);
+    buff.resize(max_buff_size * dim);
     ItrReader reader(base_filename, "bvecs");
 
     size_t cnt = 0;
     size_t local_cnt = 0;
     while (!reader.IsEnd()) {
-        if (cnt >= N) {
+        if (cnt >= nb) {
             std::cout << "Stop reading" << std::endl;
             break;
         }
         std::vector<float> tmp = reader.Next();
-        std::copy(tmp.data(), tmp.data() + orig, buff.begin() + local_cnt * DIM);
+        std::copy(tmp.data(), tmp.data() + dim, buff.begin() + local_cnt * dim);
         local_cnt++;
         cnt++;
         if (cnt % max_buff_size == 0) {
@@ -377,7 +377,7 @@ int main(int argc, char *argv[]) {
             index->add(max_buff_size, tmp.data());
 
             buff.clear();
-            buff.resize(max_buff_size * DIM);
+            buff.resize(max_buff_size * dim);
             std::cout << "Add " << cnt << " / " << nb << " vectors in total" << std::endl;
             local_cnt = 0;
         }
