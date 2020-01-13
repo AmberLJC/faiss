@@ -180,7 +180,7 @@ float * fvecs_read( const char  *filename,  string ext, int d, int top_n){
             vecs[cnt*d+i]=tmp[i];
         }
         cnt++;
-        if(cnt % 100000 ==0 ){
+        if(cnt % 1000000 ==0 ){
             cout<<"read "<<cnt<< " lines"<<endl;
         }
     }
@@ -348,14 +348,43 @@ int main(int argc, char *argv[]) {
      delete [] train;
 
 
-     float * base = new float [dim * nb];
-     base  = fvecs_read(base_filename, "bvecs", dim, nb);
+
+    t1 = elapsed() - t0;
+    printf("[%.3f s] Indexing database, size %ld*%ld\n",
+           t1, nb, dim);
 
 
-     t1 = elapsed() - t0;
-     printf("[%.3f s] Indexing database, size %ld*%ld\n",
-            t1, nb, dim);
-     index->add(nb, base);
+    size_t max_buff = int(nb/100);
+
+    std::vector<float> buff;
+    buff.resize(max_buff_size * DIM);
+    ItrReader reader(base_filename, "bvecs");
+
+    cnt = 0;
+    size_t local_cnt = 0;
+    while (!reader.IsEnd()) {
+        if (cnt >= N) {
+            std::cout << "Stop reading" << std::endl;
+            break;
+        }
+        std::vector<float> tmp = reader.Next();
+        std::copy(tmp.data(), tmp.data() + orig, buff.begin() + local_cnt * DIM);
+        local_cnt++;
+        cnt++;
+        if (cnt % max_buff_size == 0) {
+
+
+            index->add(max_buff_size, tmp.data());
+
+            buff.clear();
+            buff.resize(max_buff_size * DIM);
+            std::cout << "Add " << cnt << " / " << N << " vectors in total" << std::endl;
+            local_cnt = 0;
+        }
+    }
+
+
+
      idx_cons = elapsed() - t1 - t0;
      printf("(****%.3f s****) INDEX CONSTRUCTION TIME. \n", elapsed() - t1 - t0);
 
