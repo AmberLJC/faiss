@@ -390,9 +390,7 @@ int main(int argc, char *argv[]) {
 
     float *query = new float [nq*dim];
     query  = fvecs_read(query_filename, "fvecs", dim, nq);
-
-
-
+    
 
     printf("[%.3f s]  Reading ground truth\n", elapsed() - t0);
 
@@ -407,12 +405,11 @@ int main(int argc, char *argv[]) {
         gt[i] = gt_knn[i*topk];
     }
 
-    std::string selected_params;
 
+    /*
+    std::string selected_params;
     printf("[%.3f s] Preparing auto-tune criterion 1-recall at 1 "
            "criterion, with k=%ld nq=%ld\n", elapsed() - t0, k, nq);
-
-
 
     faiss::OneRecallAtRCriterion crit(nq, 1);
     crit.set_groundtruth(k, nullptr, gt);
@@ -448,6 +445,9 @@ int main(int argc, char *argv[]) {
            elapsed() - t0, selected_params.c_str());
 
     params.set_index_parameters(index, selected_params.c_str());
+    */
+
+
     t1 = elapsed() - t0;
     printf("[%.3f s] Perform a search on %ld queries\n",
            t1, nq);
