@@ -402,7 +402,7 @@ int main(int argc, char *argv[]) {
      size_t topk;
      int *gt_knn = ivecs_read(gnd_filename, &topk, &nqq);
 
-     size_t k = 1;
+     size_t k = 100;
      faiss::Index::idx_t *gt;
      gt = new faiss::Index::idx_t[k * nq];
  for(int i =0; i<nq; ++i){

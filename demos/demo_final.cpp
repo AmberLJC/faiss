@@ -357,7 +357,7 @@ int main(int argc, char *argv[]) {
     float *xq = new float [query_num*dim];
     copy(x , x + query_num*dim, xq  );
 
-    size_t k = 1;
+    size_t k = 100;
     faiss::Index::idx_t *gt;
     gt = new faiss::Index::idx_t[k * nq];
 

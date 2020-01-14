@@ -299,7 +299,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
     // const char *index_key = "IVF4096,Flat";
     // const char *index_key = "LSH4096";
     // const char *index_key = "HNSW128_2x32";
@@ -337,8 +336,6 @@ int main(int argc, char *argv[]) {
     float *train = new float [nt*dim];
 
     train  = fvecs_read(learn_filename, "fvecs", dim, nt);
-
-
 
     index->train(nt, train);
     trn = elapsed() - t1 - t0;
@@ -390,7 +387,7 @@ int main(int argc, char *argv[]) {
 
     float *query = new float [nq*dim];
     query  = fvecs_read(query_filename, "fvecs", dim, nq);
-    
+
 
     printf("[%.3f s]  Reading ground truth\n", elapsed() - t0);
 
@@ -398,7 +395,7 @@ int main(int argc, char *argv[]) {
     size_t topk;
     int *gt_knn = ivecs_read(gnd_filename, &topk, &nqq);
 
-    size_t k = 1;
+    size_t k = 100;
     faiss::Index::idx_t *gt;
     gt = new faiss::Index::idx_t[k * nq];
     for(int i =0; i<nq; ++i){
