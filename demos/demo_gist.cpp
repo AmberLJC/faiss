@@ -397,7 +397,7 @@ int main(int argc, char *argv[]) {
 
     size_t k = 100;
     faiss::Index::idx_t *gt;
-    gt = new faiss::Index::idx_t[k * nq];
+    gt = new faiss::Index::idx_t[nq];
     for(int i =0; i<nq; ++i){
         gt[i] = gt_knn[i*topk];
     }
@@ -459,7 +459,7 @@ int main(int argc, char *argv[]) {
 
     int n_1 = 0, n_10 = 0, n_100 = 0;
     for (int i = 0; i < nq; i++) {
-        int gt_nn = gt[i * k];
+        int gt_nn = gt[i ];
         for (int j = 0; j < k; j++) {
             if (I[i * k + j] == gt_nn) {
                 if (j < 1) n_1++;

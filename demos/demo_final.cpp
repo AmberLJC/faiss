@@ -359,7 +359,7 @@ int main(int argc, char *argv[]) {
 
     size_t k = 100;
     faiss::Index::idx_t *gt;
-    gt = new faiss::Index::idx_t[k * nq];
+    gt = new faiss::Index::idx_t[ nq];
 
 
     printf("[%.3f s]  Finding ground truth\n", elapsed() - t0);
