@@ -271,10 +271,10 @@ int main(int argc, char *argv[]) {
     double t0 = elapsed();
     size_t dim =128;
 
-    char learn_filename[50] = "../../naive_PQ_sparse/data/siftsmall/siftsmall_learn.fvecs";
-    char query_filename[50] = "../../naive_PQ_sparse/data/siftsmall/siftsmall_query.fvecs";
-    char base_filename[50] = "../../naive_PQ_sparse/data/siftsmall/siftsmall_base.fvecs";
-    char gnd_filename[50] = "../../naive_PQ_sparse/data/siftsmall/siftsmall_groundtruth.ivecs";
+    char learn_filename[100] = "../../naive_PQ_sparse/data/siftsmall/siftsmall_learn.fvecs";
+    char query_filename[100] = "../../naive_PQ_sparse/data/siftsmall/siftsmall_query.fvecs";
+    char base_filename[100] = "../../naive_PQ_sparse/data/siftsmall/siftsmall_base.fvecs";
+    char gnd_filename[100] = "../../naive_PQ_sparse/data/siftsmall/siftsmall_groundtruth.ivecs";
 
 
     char index_key[50];
