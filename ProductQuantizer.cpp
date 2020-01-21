@@ -53,7 +53,7 @@ void pq_estimators_from_tables_Mmul4 (int M, const CT * codes,
         float dis = 0;
         const float *dt = dis_table;
 
-        for (size_t m = 0; m < M; m+=4) {
+        for (size_t m = 0; m < M; m += 4) {
             float dism = 0;
             dism  = dt[*codes++]; dt += ksub;
             dism += dt[*codes++]; dt += ksub;
@@ -104,8 +104,6 @@ static inline void pq_estimators_from_tables (const ProductQuantizer& pq,
                                               float * heap_dis,
                                               long * heap_ids)
 {
-
-
 
     if (pq.M == 4)  {
 
