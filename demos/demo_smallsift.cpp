@@ -326,7 +326,7 @@ int main(int argc, char *argv[]) {
 
     size_t nt = 500000;
     size_t nb = 1000000;
-    size_t nq = 100;
+    size_t nq = 1000;
 
     //   for(int i=0; i < 100 ; i=i+1){printf("%f , ",xt[i]);}
     printf("[%.3f s] Preparing index \"%s\" d=%ld\n",
